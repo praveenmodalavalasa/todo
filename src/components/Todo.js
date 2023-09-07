@@ -1,27 +1,49 @@
+import React, { useState } from "react";
+
 import { Input, Button, Heading, Center, Stack } from "@chakra-ui/react";
-import { CheckIcon } from "@chakra-ui/icons";
-import React from "react";
+import { Box, Image } from "@chakra-ui/react";
+
+import {BsCircle} from "react-icons/bs";
 
 const Todo = () => {
+  const [image, setImage] = useState("./Dark.jpg");
+
   return (
     <>
-      <Center h="500px" color="white">
-        <Stack>
-          <Stack direction="row" justifyContent="center">
-            <CheckIcon alignSelf="center" color="black" w="6" h="6" />
-            <Heading color="Black">Todo List</Heading>
-          </Stack>
-          <Stack direction="row">
-            <Input
-              placeholder="Add Item"
-              w="300px"
-              textColor="black"
-              marginRight="3"
-            />
-            <Button colorScheme="green">Add Item</Button>
+      <Box>
+        <Image src={image} w="100%" h="40vh" alt="Light Mode" />
+        <Stack mt="-60" justifyContent="center" alignItems="center">
+          <Stack>
+            <Heading color="White" marginBottom="6">
+              T O D O
+            </Heading>
+            <Stack pos="relative">
+              <BsCircle style={{position:"absolute", border:"1px solid #777a92", borderRadius:"50%", zIndex:"1", top:"22%", left:"15px", width:"20px", height:"20px"}} />
+              <Input
+                placeholder="Create a new todo..."
+                textColor="white"
+                marginRight="40"
+                h="12"
+                w="100%"
+                bg={"#24273d"}
+                border="0"
+                focusBorderColor="white"
+                px="20"
+                py="5"
+                marginBottom={"4"}
+              />
+            </Stack>
+            <Button
+              colorScheme="green"
+              onClick={() => {
+                setImage(image === "./Dark.jpg" ? "./Light.jpg" : "./Dark.jpg");
+              }}
+            >
+              Add Item
+            </Button>
           </Stack>
         </Stack>
-      </Center>
+      </Box>
     </>
   );
 };
