@@ -67,8 +67,11 @@ const Todo = ({ setBgColor }) => {
                   height: "20px",
                 }}
               />
+              
               <Input
                 placeholder="Create a new todo..."
+                _placeholder={{fontFamily:"Helvetica"}}
+                fontFamily="inherit"
                 textColor={image === "./Dark.jpg" ? "white" : "black"}
                 h="12"
                 w="100%"
@@ -88,7 +91,7 @@ const Todo = ({ setBgColor }) => {
                 borderBottom="1px"
                 borderColor={"gray"}
               >
-                <Stack direction="row">
+                <Stack direction="row" className="todoItem">
                   <BsCircle
                     cursor="pointer"
                     style={{
@@ -107,11 +110,12 @@ const Todo = ({ setBgColor }) => {
                     marginTop="2.5"
                     textColor={image === "./Dark.jpg" ? "white" : "black"}
                   >
-                    Hi Praveen
+                    Hi Prana
                   </Text>
                   <Spacer />
                   <RxCross1
                     pos="absolute"
+                    className="todoDelete"
                     style={{
                       margin: "12.5px",
                       marginTop: "12.5px",
@@ -138,12 +142,11 @@ const Todo = ({ setBgColor }) => {
                 >
                   <Text textColor="gray">0 items left</Text>
                   <Spacer />
-                  <Button variant="link">All</Button>
-                  <Button variant="link">Active</Button>
-                  <Button variant="link">Completed</Button>
+                  <Button variant="link" _hover={{textDecoration:"none", textColor: "white"}} >All</Button>
+                  <Button variant="link" _hover={{textDecoration:"none", textColor: "white"}} >Active</Button>
+                  <Button variant="link" _hover={{textDecoration:"none", textColor: "white"}} >Completed</Button>
                   <Spacer />
-                  <Button variant="link">Clear</Button>
-                  <Button variant="link">Completed</Button>
+                  <Button variant="link" _hover={{textDecoration:"none", textColor: "white"}} >Clear Completed</Button>
                 </Stack>
               </Box>
             </Stack>

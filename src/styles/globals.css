@@ -105,3 +105,13 @@ a {
     color-scheme: dark;
   }
 }
+
+.todoDelete {
+  display: none;
+}
+.todoItem:hover .todoDelete  {
+  display: block;
+}
+.todoNone:hover {
+  text-decoration: none ;
+}
