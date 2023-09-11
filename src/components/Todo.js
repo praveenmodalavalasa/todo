@@ -81,7 +81,8 @@ const Todo = ({ setBgColor }) => {
                 cursor="pointer"
                 style={{
                   position: "absolute",
-                  border: "1px solid #777a92",
+                  border: "0px solid #777a92",
+                  color: "#777a92",
                   borderRadius: "50%",
                   zIndex: "2",
                   top: "22%",
@@ -110,7 +111,8 @@ const Todo = ({ setBgColor }) => {
               </form>
             </Stack>
             <Stack spacing={0}>
-              {todos.filter((todo) => (todosFilter === "All" ? true : todosFilter === "Active" ? !todo.complete : todo.complete)).map((todo) => (<Box
+              {todos.filter((todo) => (todosFilter === "All" ? true : todosFilter === "Active" ? !todo.complete : todo.complete)).map((todo) => (
+              <Box
               key={todo.id}
                 textColor="white"
                 bg={image === "./Dark.jpg" ? "#24273d" : "white"}
