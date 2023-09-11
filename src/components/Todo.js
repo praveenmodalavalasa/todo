@@ -12,9 +12,15 @@ import {
 } from "@chakra-ui/react";
 import { Box, Image } from "@chakra-ui/react";
 
-import { BsCircle, BsFillSunFill, BsFillMoonFill, BsFillCheckCircleFill } from "react-icons/bs";
+import {
+  BsCircle,
+  BsFillSunFill,
+  BsFillMoonFill,
+  BsFillCheckCircleFill,
+} from "react-icons/bs";
 import { RxCross1 } from "react-icons/rx";
 import { nanoid } from "nanoid";
+import { Reorder } from "framer-motion";
 
 const Todo = ({ setBgColor }) => {
   const [image, setImage] = useState("./Dark.jpg");
@@ -24,21 +30,29 @@ const Todo = ({ setBgColor }) => {
 
   const handleAddTodo = (e) => {
     e.preventDefault();
-    setTodos((prev) => [...prev, {id: nanoid(), task: input, complete: false}])
-    setInput("")
-  }
+    if (input.trim() === "") return;
+    setTodos((prev) => [
+      ...prev,
+      { id: nanoid(), task: input, complete: false },
+    ]);
+    setInput("");
+  };
 
   const handleDeleteTask = (id) => {
-    setTodos((prev) => prev.filter((todo) => todo.id !== id))
-  }
+    setTodos((prev) => prev.filter((todo) => todo.id !== id));
+  };
 
   const handleCompleteTask = (id) => {
-    setTodos((prev) => prev.map((todo) => todo.id === id ? {...todo, complete: !todo.complete} : todo))
-  }
+    setTodos((prev) =>
+      prev.map((todo) =>
+        todo.id === id ? { ...todo, complete: !todo.complete } : todo
+      )
+    );
+  };
 
   const handleClearCompleted = () => {
-    setTodos((prev) => prev.filter((todo) => !todo.complete))
-  }
+    setTodos((prev) => prev.filter((todo) => !todo.complete));
+  };
 
   return (
     <>
@@ -59,6 +73,7 @@ const Todo = ({ setBgColor }) => {
                     );
                     setBgColor("#E2E8F0");
                   }}
+                  cursor="pointer"
                   style={{ color: "white", marginTop: "10" }}
                   size={30}
                 />
@@ -70,6 +85,7 @@ const Todo = ({ setBgColor }) => {
                     );
                     setBgColor("black");
                   }}
+                  cursor="pointer"
                   style={{ color: "white", marginTop: "10" }}
                   size={30}
                 />
@@ -77,98 +93,127 @@ const Todo = ({ setBgColor }) => {
             </Stack>
             <Stack pos="relative">
               <form onSubmit={handleAddTodo}>
-              <BsCircle
-                cursor="pointer"
-                style={{
-                  position: "absolute",
-                  border: "0px solid #777a92",
-                  color: "#777a92",
-                  borderRadius: "50%",
-                  zIndex: "2",
-                  top: "22%",
-                  left: "15px",
-                  width: "20px",
-                  height: "20px",
-                }}
-                onClick={(e) => handleAddTodo(e)}
-              />
-              
-              <Input
-                placeholder="Create a new todo..."
-                _placeholder={{fontFamily:"Helvetica"}}
-                fontFamily="inherit"
-                textColor={image === "./Dark.jpg" ? "white" : "black"}
-                h="12"
-                w="100%"
-                bg={image === "./Dark.jpg" ? "#24273d" : "white"}
-                border="0"
-                focusBorderColor="white"
-                pl={12}
-                marginBottom="4"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-              />
+                <BsCircle
+                  cursor="pointer"
+                  style={{
+                    position: "absolute",
+                    border: "0px solid #777a92",
+                    color: "#777a92",
+                    borderRadius: "50%",
+                    zIndex: "2",
+                    top: "22%",
+                    left: "15px",
+                    width: "20px",
+                    height: "20px",
+                  }}
+                  onClick={(e) => handleAddTodo(e)}
+                />
+
+                <Input
+                  placeholder="Create a new todo..."
+                  _placeholder={{ fontFamily: "Helvetica" }}
+                  fontFamily="inherit"
+                  textColor={image === "./Dark.jpg" ? "white" : "black"}
+                  h="12"
+                  w="100%"
+                  bg={image === "./Dark.jpg" ? "#24273d" : "white"}
+                  border="0"
+                  focusBorderColor="white"
+                  pl={12}
+                  marginBottom="4"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                />
               </form>
             </Stack>
             <Stack spacing={0}>
-              {todos.filter((todo) => (todosFilter === "All" ? true : todosFilter === "Active" ? !todo.complete : todo.complete)).map((todo) => (
-              <Box
-              key={todo.id}
-                textColor="white"
-                bg={image === "./Dark.jpg" ? "#24273d" : "white"}
-                h="12"
-                w="100%"
-                borderBottom="1px"
-                borderColor={"gray"}
-              >
-                <Stack direction="row" className="todoItem">
-                  {todo.complete ? <BsFillCheckCircleFill cursor="pointer"
-                    style={{
-                      border: "0px solid #777a92",
-                      color: "#777a92",
-                      borderRadius: "50%",
-                      width: "20px",
-                      height: "20px",
-                      marginLeft: "15px",
-                      marginTop: "12.5",
-                    }}
-                    onClick={() => handleCompleteTask(todo.id)}/> : <BsCircle
-                    cursor="pointer"
-                    style={{
-                      border: "0px solid #777a92",
-                      color: "#777a92",
-                      borderRadius: "50%",
-                      width: "20px",
-                      height: "20px",
-                      marginLeft: "15px",
-                      marginTop: "12.5",
-                    }}
-                    onClick={() => handleCompleteTask(todo.id)}
-                  />}
+              <Reorder.Group axis="y" values={todos} onReorder={setTodos}>
+                {todos
+                  .filter((todo) =>
+                    todosFilter === "All"
+                      ? true
+                      : todosFilter === "Active"
+                      ? !todo.complete
+                      : todo.complete
+                  )
+                  .map((todo) => (
+                    <Reorder.Item
+                      value={todo}
+                      key={todo.id}
+                      style={{ listStyle: "none" }}
+                    >
+                      <Box
+                        textColor="white"
+                        bg={image === "./Dark.jpg" ? "#24273d" : "white"}
+                        h="12"
+                        w="100%"
+                        borderBottom="1px"
+                        borderColor={"gray"}
+                      >
+                        <Stack direction="row" className="todoItem">
+                          {todo.complete ? (
+                            <BsFillCheckCircleFill
+                              cursor="pointer"
+                              style={{
+                                border: "0px solid #777a92",
+                                color: "#777a92",
+                                borderRadius: "50%",
+                                width: "20px",
+                                height: "20px",
+                                marginLeft: "15px",
+                                marginTop: "12.5",
+                              }}
+                              onClick={() => handleCompleteTask(todo.id)}
+                            />
+                          ) : (
+                            <BsCircle
+                              cursor="pointer"
+                              style={{
+                                border: "0px solid #777a92",
+                                color: "#777a92",
+                                borderRadius: "50%",
+                                width: "20px",
+                                height: "20px",
+                                marginLeft: "15px",
+                                marginTop: "12.5",
+                              }}
+                              onClick={() => handleCompleteTask(todo.id)}
+                            />
+                          )}
 
-                  <Text
-                    marginLeft="2"
-                    marginTop="2.5"
-                    textColor={todo.complete ? "#777a92" : image === "./Dark.jpg" ? "white" : "black"}
-                    as={todo.complete ? "s" : ""}
-                  >
-                    {todo.task}
-                  </Text>
-                  <Spacer />
-                  <RxCross1
-                    pos="absolute"
-                    className="todoDelete"
-                    style={{
-                      margin: "12.5px",
-                      marginTop: "12.5px",
-                      color: "#777a92",
-                      width: "20px",
-                      height: "20px",
-                    }}
-                    onClick={() => handleDeleteTask(todo.id)}
-                  />
-                </Stack>
-              </Box>))}
+                          <Text
+                            marginLeft="2"
+                            marginTop="2.5"
+                            textColor={
+                              todo.complete
+                                ? "#777a92"
+                                : image === "./Dark.jpg"
+                                ? "white"
+                                : "black"
+                            }
+                            as={todo.complete ? "s" : ""}
+                          >
+                            {todo.task}
+                          </Text>
+                          <Spacer />
+                          <RxCross1
+                            pos="absolute"
+                            cursor="pointer"
+                            className="todoDelete"
+                            style={{
+                              margin: "12.5px",
+                              marginTop: "12.5px",
+                              color: "#777a92",
+                              width: "20px",
+                              height: "20px",
+                            }}
+                            onClick={() => handleDeleteTask(todo.id)}
+                          />
+                        </Stack>
+                      </Box>
+                    </Reorder.Item>
+                  ))}
+              </Reorder.Group>
               <Box
                 textColor="white"
                 borderBottomRadius="8"
@@ -185,11 +230,65 @@ const Todo = ({ setBgColor }) => {
                 >
                   <Text textColor="gray">{todos.length} items left</Text>
                   <Spacer />
-                  <Button variant="link" textColor={todosFilter === "All" ? "#3a78f2" : "gray"} _hover={{textDecoration:"none", textColor: todosFilter==="All" ? "" : image === "./Dark.jpg" ? "white" : "black"}} onClick={() => setTodosFilter("All")} >All</Button>
-                  <Button variant="link" textColor={todosFilter === "Active" ? "#3a78f2" : "gray"} _hover={{textDecoration:"none", textColor: todosFilter==="Active" ? "" : image === "./Dark.jpg" ? "white" : "black"}} onClick={() => setTodosFilter("Active")}>Active</Button>
-                  <Button variant="link" textColor={todosFilter === "Completed" ? "#3a78f2" : "gray"} _hover={{textDecoration:"none", textColor: todosFilter==="Completed" ? "" : image === "./Dark.jpg" ? "white" : "black"}} onClick={() => setTodosFilter("Completed")}>Completed</Button>
+                  <Button
+                    variant="link"
+                    textColor={todosFilter === "All" ? "#3a78f2" : "gray"}
+                    _hover={{
+                      textDecoration: "none",
+                      textColor:
+                        todosFilter === "All"
+                          ? ""
+                          : image === "./Dark.jpg"
+                          ? "white"
+                          : "black",
+                    }}
+                    onClick={() => setTodosFilter("All")}
+                  >
+                    All
+                  </Button>
+                  <Button
+                    variant="link"
+                    textColor={todosFilter === "Active" ? "#3a78f2" : "gray"}
+                    _hover={{
+                      textDecoration: "none",
+                      textColor:
+                        todosFilter === "Active"
+                          ? ""
+                          : image === "./Dark.jpg"
+                          ? "white"
+                          : "black",
+                    }}
+                    onClick={() => setTodosFilter("Active")}
+                  >
+                    Active
+                  </Button>
+                  <Button
+                    variant="link"
+                    textColor={todosFilter === "Completed" ? "#3a78f2" : "gray"}
+                    _hover={{
+                      textDecoration: "none",
+                      textColor:
+                        todosFilter === "Completed"
+                          ? ""
+                          : image === "./Dark.jpg"
+                          ? "white"
+                          : "black",
+                    }}
+                    onClick={() => setTodosFilter("Completed")}
+                  >
+                    Completed
+                  </Button>
                   <Spacer />
-                  <Button onClick={() => handleClearCompleted()} variant="link" _hover={{textDecoration:"none", textColor: image === "./Dark.jpg" ? "white" : "black"}} >Clear Completed</Button>
+                  <Button
+                    onClick={() => handleClearCompleted()}
+                    variant="link"
+                    _hover={{
+                      textDecoration: "none",
+                      textColor: image === "./Dark.jpg" ? "white" : "black",
+                    }}
+                  >
+                    Clear Completed
+                  </Button>
                 </Stack>
               </Box>
             </Stack>
