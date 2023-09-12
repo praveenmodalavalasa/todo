@@ -17,8 +17,8 @@ import {
   BsFillSunFill,
   BsFillMoonFill,
   BsFillCheckCircleFill,
+  BsXCircleFill,
 } from "react-icons/bs";
-import { RxCross1 } from "react-icons/rx";
 import { nanoid } from "nanoid";
 import { Reorder } from "framer-motion";
 
@@ -127,7 +127,15 @@ const Todo = ({ setBgColor }) => {
               </form>
             </Stack>
             <Stack spacing={0}>
-              <Reorder.Group axis="y" values={todos} onReorder={setTodos}>
+              <Reorder.Group
+                axis="y"
+                values={todos}
+                onReorder={setTodos}
+                style={{
+                  overflowY: "auto",
+                  maxHeight: "50vh",
+                }}
+              >
                 {todos
                   .filter((todo) =>
                     todosFilter === "All"
@@ -196,7 +204,7 @@ const Todo = ({ setBgColor }) => {
                             {todo.task}
                           </Text>
                           <Spacer />
-                          <RxCross1
+                          <BsXCircleFill
                             pos="absolute"
                             cursor="pointer"
                             className="todoDelete"
@@ -206,6 +214,7 @@ const Todo = ({ setBgColor }) => {
                               color: "#777a92",
                               width: "20px",
                               height: "20px",
+                              color: image === "./Dark.jpg" ? "white" : "black",
                             }}
                             onClick={() => handleDeleteTask(todo.id)}
                           />
