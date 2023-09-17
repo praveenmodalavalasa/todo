@@ -52,14 +52,14 @@ const LoginPage = ({ setPage, setBgColor, image, setImage }) => {
               <Stack direction="column" w="30vw">
                 <Text
                   as="b"
-                  textColor={image === "./Dark.jpg" ? "wHite" : "./Dark.jpg"}
+                  textColor={image === "./Dark.jpg" ? "white" : "./Dark.jpg"}
                 >
                   Username
                 </Text>
                 <Input bg="white" placeholder="Email address" w="full" />
                 <Text
                   as="b"
-                  textColor={image === "./Dark.jpg" ? "wHite" : "./Dark.jpg"}
+                  textColor={image === "./Dark.jpg" ? "white" : "./Dark.jpg"}
                 >
                   Password
                 </Text>
@@ -69,12 +69,12 @@ const LoginPage = ({ setPage, setBgColor, image, setImage }) => {
                   marginTop="6"
                   colorScheme="green"
                   alignSelf="center"
-                  textColor={image === "./Dark.jpg" ? "wHite" : "./Dark.jpg"}
+                  textColor={image === "./Dark.jpg" ? "white" : "./Dark.jpg"}
                 >
                   LOGIN
                 </Button>
                 <Text
-                  textColor={image === "./Dark.jpg" ? "wHite" : "./Dark.jpg"}
+                  textColor={image === "./Dark.jpg" ? "white" : "./Dark.jpg"}
                   textAlign="center"
                 >
                   Don't have an account?{" "}
