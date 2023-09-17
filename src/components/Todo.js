@@ -9,8 +9,9 @@ import {
   Spacer,
   Text,
   VStack,
+  Box,
+  Image,
 } from "@chakra-ui/react";
-import { Box, Image } from "@chakra-ui/react";
 
 import {
   BsCircle,
@@ -23,7 +24,6 @@ import { nanoid } from "nanoid";
 import { Reorder } from "framer-motion";
 
 const Todo = ({ setBgColor }) => {
-  const [image, setImage] = useState("./Dark.jpg");
   const [input, setInput] = useState("");
   const [todos, setTodos] = useState([]);
   const [todosFilter, setTodosFilter] = useState("All");
