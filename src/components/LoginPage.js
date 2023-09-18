@@ -1,4 +1,8 @@
 import React from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import auth from "./Firebase-Auth";
 import {
   Box,
   Heading,
@@ -13,6 +17,32 @@ import {
 import { BsFillSunFill, BsFillMoonFill } from "react-icons/bs";
 
 const LoginPage = ({ setPage, setBgColor, image, setImage }) => {
+  const router = useRouter();
+
+  const [email, setEmail] = useState("");
+  const [pass, setPass] = useState("");
+  const [error, setError] = useState("");
+
+  
+console.log(process.env.REACT_APP_API_KEY)
+
+  const login = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await signInWithEmailAndPassword(auth, email, pass);
+      localStorage.setItem("user", res.user.uid);
+      router.push("/todo");
+    } catch (err) {
+      if(err.message.includes("invalid-login-credentials")) {
+        setError("Invalid Credentials");
+      } else {
+        setError("Invalid Email. Please Register");
+      }
+    }
+  };
+
+
   return (
     <>
       <Box>
@@ -48,27 +78,45 @@ const LoginPage = ({ setPage, setBgColor, image, setImage }) => {
                 />
               )}
             </Center>
+            {
+              error && (
+                <Center style={{color: "red"}}>
+                  {error}
+                </Center>
+              )
+            }
             <Center>
               <Stack direction="column" w="30vw">
                 <Text
                   as="b"
                   textColor={image === "./Dark.jpg" ? "white" : "./Dark.jpg"}
                 >
-                  Username
+                  Email
                 </Text>
-                <Input bg="white" placeholder="Email address" w="full" />
+                <Input
+                  bg="white"
+                  placeholder="Email address"
+                  w="full"
+                  onChange={(e) => {setEmail(e.target.value.trim())}}
+                />
                 <Text
                   as="b"
                   textColor={image === "./Dark.jpg" ? "white" : "./Dark.jpg"}
                 >
                   Password
                 </Text>
-                <Input bg="white" placeholder="********" w="full" />
+                <Input
+                  bg="white"
+                  placeholder="********"
+                  w="full"
+                  onChange={(e) => {setPass(e.target.value.trim())}}
+                />
                 <Button
                   w="24"
                   marginTop="6"
                   colorScheme="green"
                   alignSelf="center"
+                  onClick={login}
                   textColor={image === "./Dark.jpg" ? "white" : "./Dark.jpg"}
                 >
                   LOGIN

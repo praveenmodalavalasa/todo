@@ -11,8 +11,27 @@ import {
   Image,
 } from "@chakra-ui/react";
 import { BsFillSunFill, BsFillMoonFill } from "react-icons/bs";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import auth from "./Firebase-Auth";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
 const RegisterPage = ({ setPage, setBgColor, image, setImage }) => {
+  const router = useRouter();
+  const register = async (e) => {
+    try {
+      const res = await createUserWithEmailAndPassword(auth, email, pass);
+      e.preventDefault();
+      router.push("/todo");
+      localStorage.setItem("user", res.user.uid);
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const [email, setEmail] = useState("");
+  const [pass, setPass] = useState("");
+
   return (
     <>
       <Box>
@@ -56,27 +75,36 @@ const RegisterPage = ({ setPage, setBgColor, image, setImage }) => {
                 >
                   Email
                 </Text>
-                <Input bg="white" placeholder="Email address" w="full" />
+                <Input
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
+                  bg="white"
+                  placeholder="Email address"
+                  w="full"
+                />
                 <Text
                   as="b"
                   textColor={image === "./Dark.jpg" ? "wHite" : "./Dark.jpg"}
                 >
                   Password
                 </Text>
-                <Input bg="white" placeholder="********" w="full" />
-                <Text
-                  as="b"
-                  textColor={image === "./Dark.jpg" ? "wHite" : "./Dark.jpg"}
-                >
-                  RePassword
-                </Text>
-                <Input bg="white" placeholder="********" w="full" />
+                <Input
+                  bg="white"
+                  onChange={(e) => {
+                    setPass(e.target.value);
+                  }}
+                  placeholder="********"
+                  w="full"
+                />
+
                 <Button
                   w="24"
                   marginTop="6"
                   colorScheme="green"
                   alignSelf="center"
                   textColor={image === "./Dark.jpg" ? "wHite" : "./Dark.jpg"}
+                  onClick={register}
                 >
                   {" "}
                   REGISTER

@@ -1,4 +1,3 @@
-import Todo from "@/components/Todo";
 import { Box } from "@chakra-ui/react";
 import { useState } from "react";
 import LoginPage from "@/components/LoginPage";
@@ -10,7 +9,6 @@ export default function Home() {
 
   return (
     <Box bgColor={bgcolor} h="100vh">
-      {/* <Todo setBgColor={setBgColor} /> */}
       {page === "login" ? (
         <LoginPage
           bgColor={bgcolor}

@@ -1,5 +1,7 @@
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import { signOut } from "firebase/auth";
+import auth from "../../components/Firebase-Auth";
 import {
   Input,
   Button,
@@ -11,8 +13,8 @@ import {
   VStack,
   Box,
   Image,
+  textDecoration,
 } from "@chakra-ui/react";
-
 import {
   BsCircle,
   BsFillSunFill,
@@ -22,12 +24,13 @@ import {
 } from "react-icons/bs";
 import { nanoid } from "nanoid";
 import { Reorder } from "framer-motion";
-
+const image = "../Dark.jpg";
 const Todo = ({ setBgColor }) => {
+  const [user, setUser] = useState(null);
   const [input, setInput] = useState("");
   const [todos, setTodos] = useState([]);
   const [todosFilter, setTodosFilter] = useState("All");
-
+  const Router = useRouter();
   const handleAddTodo = (e) => {
     e.preventDefault();
     if (input.trim() === "") return;
@@ -52,6 +55,23 @@ const Todo = ({ setBgColor }) => {
 
   const handleClearCompleted = () => {
     setTodos((prev) => prev.filter((todo) => !todo.complete));
+  };
+
+  useEffect(() => {
+    const userFromLocalStorage = localStorage.getItem("user");  
+    console.log(userFromLocalStorage)
+    if (userFromLocalStorage) {
+      setUser(userFromLocalStorage);
+    } else {
+      Router.push("/");
+    }
+  }, []);
+
+  const signout = async () => {
+    await signOut(auth);
+    localStorage.removeItem("user");
+    setUser(null);
+    Router.push("/");
   };
 
   return (
@@ -298,15 +318,24 @@ const Todo = ({ setBgColor }) => {
                   >
                     Clear Completed
                   </Button>
+                  <Button
+                    textColor={todosFilter === "Completed" ? "black" : "white"}
+                    as="b"
+                    bgColor="red"
+                    colorScheme="red"
+                    onClick={signout}
+                  >
+                    Signout
+                  </Button>
                 </Stack>
               </Box>
             </Stack>
           </Stack>
-          <Text textColor="gray" textAlign="center" pos="absolute" bottom={5}>
-            Drag and drop the reorder list
-          </Text>
         </Stack>
       </Box>
+      <Text textColor="gray" textAlign="center" pos="absolute" bottom={5}>
+        Drag and drop the reorder list
+      </Text>
     </>
   );
 };
