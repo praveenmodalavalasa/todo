@@ -21,10 +21,7 @@ const LoginPage = ({ setPage, setBgColor, image, setImage }) => {
 
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
-  const [error, setError] = useState("");
-
-  
-console.log(process.env.REACT_APP_API_KEY)
+  const [error, setError] = useState(router.query.err || "");
 
   const login = async (e) => {
     e.preventDefault();
@@ -34,14 +31,13 @@ console.log(process.env.REACT_APP_API_KEY)
       localStorage.setItem("user", res.user.uid);
       router.push("/todo");
     } catch (err) {
-      if(err.message.includes("invalid-login-credentials")) {
-        setError("Invalid Credentials");
-      } else {
-        setError("Invalid Email. Please Register");
-      }
+      const index = err.message.indexOf("/");
+      const msg = err.message
+        .slice(index + 1, err.message.length - 2)
+        .replace("-", " ");
+      setError(msg.charAt(0).toUpperCase() + msg.slice(1));
     }
   };
-
 
   return (
     <>
@@ -78,13 +74,7 @@ console.log(process.env.REACT_APP_API_KEY)
                 />
               )}
             </Center>
-            {
-              error && (
-                <Center style={{color: "red"}}>
-                  {error}
-                </Center>
-              )
-            }
+            {error && <Center style={{ color: "red" }}>{error}</Center>}
             <Center>
               <Stack direction="column" w="30vw">
                 <Text
@@ -97,7 +87,9 @@ console.log(process.env.REACT_APP_API_KEY)
                   bg="white"
                   placeholder="Email address"
                   w="full"
-                  onChange={(e) => {setEmail(e.target.value.trim())}}
+                  onChange={(e) => {
+                    setEmail(e.target.value.trim());
+                  }}
                 />
                 <Text
                   as="b"
@@ -109,7 +101,9 @@ console.log(process.env.REACT_APP_API_KEY)
                   bg="white"
                   placeholder="********"
                   w="full"
-                  onChange={(e) => {setPass(e.target.value.trim())}}
+                  onChange={(e) => {
+                    setPass(e.target.value.trim());
+                  }}
                 />
                 <Button
                   w="24"

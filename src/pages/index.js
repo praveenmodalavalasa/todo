@@ -1,7 +1,9 @@
 import { Box } from "@chakra-ui/react";
 import { useState } from "react";
+
 import LoginPage from "@/components/LoginPage";
 import RegisterPage from "@/components/Register-Page";
+
 export default function Home() {
   const [image, setImage] = useState("./Dark.jpg");
   const [bgcolor, setBgColor] = useState("black");

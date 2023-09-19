@@ -18,19 +18,26 @@ import { useRouter } from "next/router";
 
 const RegisterPage = ({ setPage, setBgColor, image, setImage }) => {
   const router = useRouter();
-  const register = async (e) => {
-    try {
-      const res = await createUserWithEmailAndPassword(auth, email, pass);
-      e.preventDefault();
-      router.push("/todo");
-      localStorage.setItem("user", res.user.uid);
-      console.log(res);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
+  const [error, setError] = useState("");
+
+  const register = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await createUserWithEmailAndPassword(auth, email, pass);
+      localStorage.setItem("user", res.user.uid);
+      router.push("/todo");
+    } catch (err) {
+      const index = err.message.indexOf("/");
+      const msg = err.message
+        .slice(index + 1, err.message.length - 2)
+        .replace("-", " ");
+      setError(msg.charAt(0).toUpperCase() + msg.slice(1));
+    }
+  };
 
   return (
     <>
@@ -67,6 +74,7 @@ const RegisterPage = ({ setPage, setBgColor, image, setImage }) => {
                 />
               )}
             </Center>
+            {error && <Center style={{ color: "red" }}>{error}</Center>}
             <Center>
               <Stack direction="column" w="30vw">
                 <Text
@@ -82,6 +90,7 @@ const RegisterPage = ({ setPage, setBgColor, image, setImage }) => {
                   bg="white"
                   placeholder="Email address"
                   w="full"
+                  type="email"
                 />
                 <Text
                   as="b"

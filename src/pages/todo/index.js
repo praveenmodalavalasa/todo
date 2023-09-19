@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+
 import { signOut } from "firebase/auth";
 import auth from "../../components/Firebase-Auth";
+
 import {
   Input,
   Button,
@@ -15,6 +17,7 @@ import {
   Image,
   textDecoration,
 } from "@chakra-ui/react";
+
 import {
   BsCircle,
   BsFillSunFill,
@@ -22,15 +25,19 @@ import {
   BsFillCheckCircleFill,
   BsXCircleFill,
 } from "react-icons/bs";
+
 import { nanoid } from "nanoid";
 import { Reorder } from "framer-motion";
+
 const image = "../Dark.jpg";
 const Todo = ({ setBgColor }) => {
+  const Router = useRouter();
+
   const [user, setUser] = useState(null);
   const [input, setInput] = useState("");
   const [todos, setTodos] = useState([]);
   const [todosFilter, setTodosFilter] = useState("All");
-  const Router = useRouter();
+
   const handleAddTodo = (e) => {
     e.preventDefault();
     if (input.trim() === "") return;
@@ -58,12 +65,11 @@ const Todo = ({ setBgColor }) => {
   };
 
   useEffect(() => {
-    const userFromLocalStorage = localStorage.getItem("user");  
-    console.log(userFromLocalStorage)
+    const userFromLocalStorage = localStorage.getItem("user");
     if (userFromLocalStorage) {
       setUser(userFromLocalStorage);
     } else {
-      Router.push("/");
+      Router.push("/?err=Please Login In");
     }
   }, []);
 
