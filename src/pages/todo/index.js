@@ -82,9 +82,20 @@ const Todo = ({ setBgColor }) => {
 
   return (
     <>
-      <Box>
-        <Image src={image} w="100%" h="40vh" alt="Light Mode" />
-        <Stack mt="-60" justifyContent="center" alignItems="center">
+      <Box overflowY={"hidden"}>
+        <Image src={image} w="100%" h="60vh" alt="Light Mode" />
+        <Stack mt="-80" justifyContent="center" alignItems="center">
+          <Stack pos="absolute" top="3" right="4">
+            <Button
+              textColor={todosFilter === "Completed" ? "black" : "white"}
+              as="b"
+              bgColor="blue"
+              colorScheme="blue"
+              onClick={signout}
+            >
+              Signout
+            </Button>
+          </Stack>
           <Stack>
             <Stack direction="row">
               <Heading color="White" marginBottom="6">
@@ -323,15 +334,6 @@ const Todo = ({ setBgColor }) => {
                     }}
                   >
                     Clear Completed
-                  </Button>
-                  <Button
-                    textColor={todosFilter === "Completed" ? "black" : "white"}
-                    as="b"
-                    bgColor="red"
-                    colorScheme="red"
-                    onClick={signout}
-                  >
-                    Signout
                   </Button>
                 </Stack>
               </Box>
