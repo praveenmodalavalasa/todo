@@ -1,5 +1,6 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+
 import { useRouter } from "next/router";
 
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -27,7 +28,6 @@ const LoginPage = ({ setPage, setBgColor, image, setImage }) => {
 
   const login = async (e) => {
     e.preventDefault();
-
     try {
       const res = await signInWithEmailAndPassword(auth, email, pass);
       localStorage.setItem("user", res.user.uid);
@@ -78,60 +78,66 @@ const LoginPage = ({ setPage, setBgColor, image, setImage }) => {
             </Center>
             {error && <Center style={{ color: "red" }}>{error}</Center>}
             <Center>
-              <Stack direction="column" w="30vw">
-                <Text
-                  as="b"
-                  textColor={image === "./Dark.jpg" ? "white" : "./Dark.jpg"}
-                >
-                  Email
-                </Text>
-                <Input
-                  bg="white"
-                  placeholder="Email address"
-                  w="full"
-                  onChange={(e) => {
-                    setEmail(e.target.value.trim());
-                  }}
-                />
-                <Text
-                  as="b"
-                  textColor={image === "./Dark.jpg" ? "white" : "./Dark.jpg"}
-                >
-                  Password
-                </Text>
-                <Input
-                  bg="white"
-                  placeholder="********"
-                  w="full"
-                  onChange={(e) => {
-                    setPass(e.target.value.trim());
-                  }}
-                />
-                <Button
-                  w="24"
-                  marginTop="6"
-                  colorScheme="green"
-                  alignSelf="center"
-                  onClick={login}
-                  textColor={image === "./Dark.jpg" ? "white" : "./Dark.jpg"}
-                >
-                  LOGIN
-                </Button>
-                <Text
-                  textColor={image === "./Dark.jpg" ? "white" : "./Dark.jpg"}
-                  textAlign="center"
-                >
-                  Don't have an account?{" "}
-                  <Button
-                    variant="link"
-                    as="u"
-                    cursor="pointer"
-                    onClick={() => setPage("Register")}
+              <form onSubmit={login}>
+                <Stack direction="column" w="30vw">
+                  <Text
+                    as="b"
+                    textColor={image === "./Dark.jpg" ? "white" : "./Dark.jpg"}
                   >
-                    Register
+                    Email
+                  </Text>
+
+                  <Input
+                    bg="white"
+                    placeholder="Email address"
+                    w="full"
+                    onChange={(e) => {
+                      setEmail(e.target.value.trim());
+                    }}
+                  />
+                  <Text
+                    as="b"
+                    textColor={image === "./Dark.jpg" ? "white" : "./Dark.jpg"}
+                  >
+                    Password
+                  </Text>
+                  <Input
+                    bg="white"
+                    placeholder="********"
+                    type="password"
+                    w="full"
+                    onChange={(e) => {
+                      setPass(e.target.value.trim());
+                    }}
+                  />
+
+                  <Button
+                    w="24"
+                    marginTop="6"
+                    colorScheme="green"
+                    alignSelf="center"
+                    type="submit"
+                    textColor={image === "./Dark.jpg" ? "white" : "./Dark.jpg"}
+                  >
+                    LOGIN
                   </Button>
-                </Text>
-              </Stack>
+
+                  <Text
+                    textColor={image === "./Dark.jpg" ? "white" : "./Dark.jpg"}
+                    textAlign="center"
+                  >
+                    Don't have an account?{" "}
+                    <Button
+                      variant="link"
+                      as="u"
+                      cursor="pointer"
+                      onClick={() => setPage("Register")}
+                    >
+                      Register
+                    </Button>
+                  </Text>
+                </Stack>
+              </form>
             </Center>
           </Stack>
         </Stack>

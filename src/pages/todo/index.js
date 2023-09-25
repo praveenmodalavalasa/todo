@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
+import { useStore } from "@/store/useStore";
+
 import { signOut } from "firebase/auth";
 import auth from "../../components/Firebase-Auth";
 
@@ -12,10 +14,8 @@ import {
   Stack,
   Spacer,
   Text,
-  VStack,
   Box,
   Image,
-  textDecoration,
 } from "@chakra-ui/react";
 
 import {
@@ -28,10 +28,16 @@ import {
 
 import { nanoid } from "nanoid";
 import { Reorder } from "framer-motion";
+//...................................................................
 
-const image = "../Dark.jpg";
-const Todo = ({ setBgColor }) => {
+const Todo = () => {
   const Router = useRouter();
+
+  const image = useStore((state) => state.image);
+  const setImage = useStore((state) => state.setImage);
+
+  const bgcolor = useStore((state) => state.bgcolor);
+  const setBgColor = useStore((state) => state.setBgColor);
 
   const [user, setUser] = useState(null);
   const [input, setInput] = useState("");
@@ -41,6 +47,7 @@ const Todo = ({ setBgColor }) => {
   const handleAddTodo = (e) => {
     e.preventDefault();
     if (input.trim() === "") return;
+
     setTodos((prev) => [
       ...prev,
       { id: nanoid(), task: input, complete: false },
@@ -80,12 +87,14 @@ const Todo = ({ setBgColor }) => {
     Router.push("/");
   };
 
+  //.......................................................................
+
   return (
     <>
-      <Box overflowY={"hidden"}>
-        <Image src={image} w="100%" h="60vh" alt="Light Mode" />
-        <Stack mt="-80" justifyContent="center" alignItems="center">
-          <Stack pos="absolute" top="3" right="4">
+      <Box overflowY={"hidden"} bgColor={bgcolor} h={"100vh"}>
+        <Image src={image} w="100%" h="40vh" alt="Light Mode" />
+        <Stack mt="-60" justifyContent="center" alignItems="center">
+          <Stack pos="absolute" top="6" right="4">
             <Button
               textColor={todosFilter === "Completed" ? "black" : "white"}
               as="b"
@@ -143,7 +152,7 @@ const Todo = ({ setBgColor }) => {
                     width: "20px",
                     height: "20px",
                   }}
-                  onClick={(e) => handleAddTodo(e)}
+                  onClick={handleAddTodo}
                 />
 
                 <Input
@@ -341,9 +350,11 @@ const Todo = ({ setBgColor }) => {
           </Stack>
         </Stack>
       </Box>
-      <Text textColor="gray" textAlign="center" pos="absolute" bottom={5}>
-        Drag and drop the reorder list
-      </Text>
+      <Center>
+        <Text textColor="gray" textAlign="center" pos="absolute" bottom={5}>
+          Drag and drop the reorder list
+        </Text>
+      </Center>
     </>
   );
 };
