@@ -80,7 +80,7 @@ const RegisterPage = ({ setPage, setBgColor, image, setImage }) => {
             {error && <Center style={{ color: "red" }}>{error}</Center>}
             <Center>
               <form onSubmit={register}>
-                <Stack direction="column" w="30vw">
+                <Stack direction="column">
                   <Text
                     as="b"
                     textColor={image === "./Dark.jpg" ? "white" : "./Dark.jpg"}

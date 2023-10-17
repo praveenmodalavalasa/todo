@@ -26,8 +26,8 @@ import {
   BsXCircleFill,
 } from "react-icons/bs";
 
-import { nanoid } from "nanoid";
 import { Reorder } from "framer-motion";
+import axios from "axios";
 //...................................................................
 
 const Todo = () => {
@@ -44,27 +44,51 @@ const Todo = () => {
   const [todos, setTodos] = useState([]);
   const [todosFilter, setTodosFilter] = useState("All");
 
-  const handleAddTodo = (e) => {
+  //...................................................................
+
+  const handleAddTodo = async (e) => {
     e.preventDefault();
+
     if (input.trim() === "") return;
+    const newTodo = await axios.post(process.env.NEXT_PUBLIC_STRAPI_URL, {
+      data: {
+        task: input,
+        complete: false,
+      },
+    });
+    const todo = await newTodo.data.data;
 
     setTodos((prev) => [
       ...prev,
-      { id: nanoid(), task: input, complete: false },
+      {
+        id: todo.id,
+        task: todo.attributes.task,
+        complete: todo.attributes.complete,
+      },
     ]);
+
     setInput("");
   };
 
   const handleDeleteTask = (id) => {
     setTodos((prev) => prev.filter((todo) => todo.id !== id));
+
+    axios.delete(process.env.NEXT_PUBLIC_STRAPI_URL + "/" + id);
   };
 
-  const handleCompleteTask = (id) => {
+  const handleCompleteTask = (id, complete) => {
     setTodos((prev) =>
       prev.map((todo) =>
         todo.id === id ? { ...todo, complete: !todo.complete } : todo
       )
     );
+    axios
+      .put(process.env.NEXT_PUBLIC_STRAPI_URL + "/" + id, {
+        data: {
+          complete: !complete,
+        },
+      })
+      .then((complete) => complete.id);
   };
 
   const handleClearCompleted = () => {
@@ -78,6 +102,19 @@ const Todo = () => {
     } else {
       Router.push("/?err=Please Login In");
     }
+    axios
+      .get(process.env.NEXT_PUBLIC_STRAPI_URL)
+      .then((response) => response.data.data)
+      .then((data) =>
+        setTodos(
+          data.map((todo) => ({
+            id: todo.id,
+            task: todo.attributes.task,
+            complete: todo.attributes.complete,
+          }))
+        )
+      )
+      .catch((err) => console.log(err.message));
   }, []);
 
   const signout = async () => {
@@ -94,7 +131,7 @@ const Todo = () => {
       <Box overflowY={"hidden"} bgColor={bgcolor} h={"100vh"}>
         <Image src={image} w="100%" h="40vh" alt="Light Mode" />
         <Stack mt="-60" justifyContent="center" alignItems="center">
-          <Stack pos="absolute" top="6" right="4">
+          <Stack pos="absolute" top="6" right={{ base: "12", md: "4" }}>
             <Button
               textColor={todosFilter === "Completed" ? "black" : "white"}
               as="b"
@@ -107,7 +144,11 @@ const Todo = () => {
           </Stack>
           <Stack>
             <Stack direction="row">
-              <Heading color="White" marginBottom="6">
+              <Heading
+                color="White"
+                marginBottom="6"
+                marginLeft={{ base: "2", md: "0" }}
+              >
                 T O D O
               </Heading>
               <Spacer />
@@ -137,7 +178,11 @@ const Todo = () => {
                 />
               )}
             </Stack>
-            <Stack pos="relative">
+            <Stack
+              pos="relative"
+              w={{ base: "96vw", md: "full" }}
+              alignSelf={{ base: "center" }}
+            >
               <form onSubmit={handleAddTodo}>
                 <BsCircle
                   cursor="pointer"
@@ -172,7 +217,11 @@ const Todo = () => {
                 />
               </form>
             </Stack>
-            <Stack spacing={0}>
+            <Stack
+              spacing={0}
+              w={{ base: "96vw", md: "full" }}
+              alignSelf={{ base: "center" }}
+            >
               <Reorder.Group
                 axis="y"
                 values={todos}
@@ -217,7 +266,9 @@ const Todo = () => {
                                 marginLeft: "15px",
                                 marginTop: "12.5",
                               }}
-                              onClick={() => handleCompleteTask(todo.id)}
+                              onClick={() =>
+                                handleCompleteTask(todo.id, todo.complete)
+                              }
                             />
                           ) : (
                             <BsCircle
@@ -231,7 +282,9 @@ const Todo = () => {
                                 marginLeft: "15px",
                                 marginTop: "12.5",
                               }}
-                              onClick={() => handleCompleteTask(todo.id)}
+                              onClick={() =>
+                                handleCompleteTask(todo.id, todo.complete)
+                              }
                             />
                           )}
 
@@ -277,7 +330,7 @@ const Todo = () => {
                 w="100%"
               >
                 <Stack
-                  direction="row"
+                  direction={{ base: "column", md: "row" }}
                   spacing={2}
                   marginRight="4"
                   marginLeft="4"
